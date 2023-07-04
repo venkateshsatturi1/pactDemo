@@ -1,0 +1,94 @@
+{
+  "consumer": {
+    "name": "AllSalesConsumer"
+  },
+  "interactions": [
+    {
+      "description": "All Store Sales Details",
+      "providerStates": [
+        {
+          "name": "Sales info"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/storeSales"
+      },
+      "response": {
+        "body": [
+          {
+            "sales": 100,
+            "storeLocaton": "string"
+          },
+          {
+            "sales": 100,
+            "storeLocaton": "string"
+          }
+        ],
+        "generators": {
+          "body": {
+            "$[*].storeLocaton": {
+              "size": 20,
+              "type": "RandomString"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 2
+                }
+              ]
+            },
+            "$[*].sales": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$[*].storeLocaton": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {
+            "Content-Type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "application/json(;\\s?charset=[\\w\\-]+)?"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.2.17"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "StoreSalesProvider"
+  }
+}
